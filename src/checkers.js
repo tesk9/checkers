@@ -1,31 +1,32 @@
-var board, currentPlayer, enemy;
-var turnCounter = 1, blackPiecesLeft = 1, redPiecesLeft = 2;
+var board, currentPlayer, enemy, taunt_on;
+var turnCounter = 1, blackPiecesLeft = 12, redPiecesLeft = 12;
 
 var resetBoard = function () {
-  // board = [
-  //   [" _ ", " B "," _ "," B "," _ "," B "," _ "," B "],
-  //   [" B "," _ "," B "," _ "," B "," _ "," B "," _ " ],
-  //   [" _ ", " B "," _ "," B "," _ "," B "," _ "," B "],
-  //   [" _ "," _ "," _ "," _ ", " _ "," _ "," _ "," _ "],
-  //   [" _ "," _ "," _ "," _ ", " _ "," _ "," _ "," _ "],
-  //   [" R "," _ "," R "," _ "," R "," _ "," R "," _ " ],
-  //   [" _ ", " R "," _ "," R "," _ "," R "," _ "," R "],
-  //   [" R "," _ "," R "," _ "," R "," _ "," R "," _ " ]
-  // ];
-  // Board to test near-victory conditions //
-    board = [
-    [" _ "," _ "," _ "," _ "," _ "," _ "," _ "," _ "],
-    [" _ "," _ "," _ "," _ "," _ "," _ "," _ "," _ "],
-    [" _ "," _ "," _ "," B "," _ "," _ "," _ "," _ "],
-    [" _ "," _ "," _ "," _ "," R "," _ "," _ "," _ "],
-    [" _ "," _ "," _ "," _ "," _ "," _ "," _ "," _ "],
-    [" _ "," _ "," _ "," _ "," _ "," _ "," R "," _ "],
-    [" _ "," _ "," _ "," _ "," _ "," _ "," _ "," _ "],
-    [" _ "," _ "," _ "," _ "," _ "," _ "," _ "," _ "]
+  board = [
+    [" _ ", " B "," _ "," B "," _ "," B "," _ "," B "],
+    [" B "," _ "," B "," _ "," B "," _ "," B "," _ " ],
+    [" _ ", " B "," _ "," B "," _ "," B "," _ "," B "],
+    [" _ "," _ "," _ "," _ ", " _ "," _ "," _ "," _ "],
+    [" _ "," _ "," _ "," _ ", " _ "," _ "," _ "," _ "],
+    [" R "," _ "," R "," _ "," R "," _ "," R "," _ " ],
+    [" _ ", " R "," _ "," R "," _ "," R "," _ "," R "],
+    [" R "," _ "," R "," _ "," R "," _ "," R "," _ " ]
   ];
+  // Board to test near-victory conditions //
+  //   board = [
+  //   [" _ "," _ "," _ "," _ "," _ "," _ "," _ "," _ "],
+  //   [" _ "," _ "," _ "," _ "," _ "," _ "," _ "," _ "],
+  //   [" _ "," _ "," _ "," B "," _ "," _ "," _ "," _ "],
+  //   [" _ "," _ "," _ "," _ "," R "," _ "," _ "," _ "],
+  //   [" _ "," _ "," _ "," _ "," _ "," _ "," _ "," _ "],
+  //   [" _ "," _ "," _ "," _ "," _ "," _ "," R "," _ "],
+  //   [" _ "," _ "," _ "," _ "," _ "," _ "," _ "," _ "],
+  //   [" _ "," _ "," _ "," _ "," _ "," _ "," _ "," _ "]
+  // ];
 
   currentPlayer = ' B ';
   enemy = ' R ';
+  taunt_on = prompt("Enter any value if you'd like to play with taunts. They are irritating.")
 };
 
 var attemptMove = function (row1, col1, row2, col2) {
@@ -80,8 +81,7 @@ var removePiece = function(row, col){
     redPiecesLeft--;
   }
   board[row][col] = " _ ";
-  // $(document).trigger("pieceTaken", [currentPlayer, enemy, row, col]);
-  taunt();
+  taunt(taunt_on);
 }
 
 var notAllowedMessage = function (message) {
@@ -89,11 +89,13 @@ var notAllowedMessage = function (message) {
   $(document).trigger("invalidMove", message);
 }
 
-var taunt = function (){
+var taunt = function (taunt){
   var message = "HAHA "+enemy+" lost a piece!!!";
   console.log(message);
-  alert("HAHA "+enemy+" lost a piece!!!");
-  alert("HAHAHAHAHAHHAHA");
+  if (taunt){
+    alert("HAHA "+enemy+" lost a piece!!!");
+    alert("HAHAHAHAHAHHAHA");
+  }
 }
 
 var changeBoard = function () {

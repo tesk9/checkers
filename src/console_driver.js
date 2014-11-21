@@ -18,7 +18,6 @@ var displayBoard = function () {
     console.log(numToChar[i] + " |" + board[i].join(" "));
   }
   console.log("\n\t\tCurrent player is: " +currentPlayer);
-  console.log("\n\t\tThe enemy is: "+enemy);
   console.log("\nThis is turn " + turnCounter);
 };
 

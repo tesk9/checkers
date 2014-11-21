@@ -19,26 +19,35 @@ $(document).ready(function(){
 
     for (var i = 0; i<8; i++){
       var $square = $row.find('.col-'+i);
-      if (element[i] === ' W ') {
-        // console.log("Something is W")
+      if (element[i] === ' B ') {
+        $square.find("span").remove("span");
         $square.append("<span class=piece></span>");
-        $(".piece").addClass('white');
+        $square.find(".piece").addClass('black');
       } else if (element[i] === ' R ') {
-        // console.log("something is R")
+        $square.find("span").remove("span");
         $square.append("<span class=piece></span>")
-        $('.piece').addClass('red');
+        $square.find('.piece').addClass('red');
       } else {
+        $square.find("span").remove("span");
       }
     }
   }
 
-  // $(".row .col").on("click", function() {
-  //   // $col = $(this).closest("col").className;
-  //   $col = $(this).closest(".col").html();
-  //   $row = $(this).parent(".row").html();
-  //   console.log($col);
-  //   console.log($row);
-  // });
+  var moveSelection = []
+  $(".row .col").on("click", function() {
+    var col = $(this)[0].classList[1];
+    var row = $(this).parent("span").get(0).classList[1];
+
+    var getBoardIndex = function (selector) {
+      return selector.charAt(selector.length - 1);
+    }
+    moveSelection.push(getBoardIndex(row),getBoardIndex(col));
+    console.log(moveSelection);
+    if (moveSelection.length === 4) {
+      attemptMove(moveSelection[0], Number(moveSelection[1]), moveSelection[2], Number(moveSelection[3]));
+      moveSelection = [];
+    }
+  });
 
 });
 
