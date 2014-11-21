@@ -42,14 +42,13 @@ var getMove = function () {
   if (endRow) {
     var endColumn = stopPlaying(prompt(currentPlayer+", to which column would you like to move "+startRow+", "+startColumn+"?"));
   }
-  return [startRow, startColumn, endRow, endColumn];
+  attemptMove(startRow, startColumn, endRow, endColumn);
+  getMove();
 }
 
 var play = function () {
   resetBoard()
   displayBoard();
-  var currentMove = getMove()
-  var row1 = currentMove[0], col1 = currentMove[1], row2 = currentMove[2], col2 = currentMove[3];
-  attemptMove(row1, col1, row2, col2);
+  getMove();
 }
 
