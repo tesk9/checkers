@@ -30,3 +30,11 @@
   border-radius: 50%;
   /*border: 2px solid gray;*/
 }
+
+.message {
+  display: inline;
+}
+
+.currentPlayer {
+  display: inline;
+}
