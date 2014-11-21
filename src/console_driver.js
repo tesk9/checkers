@@ -18,4 +18,38 @@ var displayBoard = function () {
     console.log(numToChar[i] + " |" + board[i].join(" "));
   }
   console.log("\n\t\tCurrent player is: " +currentPlayer)
+  console.log("\nThis is turn " + turnCounter);
 };
+
+var getMove = function () {
+  var stopPlaying = function (input){
+    if (input[0] == "q"){
+      alert("You've quit the game! "+enemy+"wins by forfeit")
+      return;
+    } else if (input[0] == "s") {
+      getMove()
+    } else {
+      return input;
+    }
+  }
+  var startRow = stopPlaying(prompt(currentPlayer+" which piece would you like to move?\nPlease enter ROW"));
+  if (startRow){  
+    var startColumn = stopPlaying(prompt(currentPlayer+", you've chosen row "+startRow+".\nPlease enter COLUMN"));
+  } 
+  if (startColumn) {  
+    var endRow = stopPlaying(prompt(currentPlayer+", to which row would you like to move "+startRow+", "+startColumn+"?"));
+  }
+  if (endRow) {
+    var endColumn = stopPlaying(prompt(currentPlayer+", to which column would you like to move "+startRow+", "+startColumn+"?"));
+  }
+  return [startRow, startColumn, endRow, endColumn];
+}
+
+var play = function () {
+  resetBoard()
+  displayBoard();
+  var currentMove = getMove()
+  var row1 = currentMove[0], col1 = currentMove[1], row2 = currentMove[2], col2 = currentMove[3];
+  attemptMove(row1, col1, row2, col2);
+}
+

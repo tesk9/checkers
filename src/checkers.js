@@ -1,4 +1,5 @@
-var board, currentPlayer, enemy, turnCounter;
+var board, currentPlayer, enemy;
+var turnCounter = 1;
 
 var resetBoard = function () {
   board = [
@@ -59,7 +60,7 @@ var makeMove = function(row1, col1, row2, col2) {
 
 var removePiece = function(row, col){
   board[row][col] = " _ ";
-  $(document).trigger("pieceTaken", [currentPlayer, enemy, row, col]);
+  // $(document).trigger("pieceTaken", [currentPlayer, enemy, row, col]);
   taunt();
 }
 
@@ -73,5 +74,9 @@ var taunt = function (){
   console.log(message);
   alert("HAHA "+enemy+" lost a piece!!!");
   alert("HAHAHAHAHAHHAHA");
-  $(document).trigger("taunt", message);
+}
+
+var changeBoard = function () {
+  displayBoard();
+  $(document).trigger("boardChange", board);
 }
