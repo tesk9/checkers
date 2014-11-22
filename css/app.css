@@ -16,10 +16,22 @@
 
 .red {
   background-color: red;
+  border: 2px solid #ff0000;
+  box-sizing: border-box;
 }
 
 .black {
-  background-color: #4c4c4c;
+  background-color: black;
+  border: 2px solid gray;
+  box-sizing: border-box;
+}
+
+.rKing {
+  border: 2px solid yellow;
+}
+
+.bKing {
+  border: 2px solid yellow;
 }
 
 .piece {
@@ -28,7 +40,6 @@
   height: 40px; /*40*/
   display: inline-block;
   border-radius: 50%;
-  /*border: 2px solid gray;*/
 }
 
 .message {

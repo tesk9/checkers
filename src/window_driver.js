@@ -1,5 +1,4 @@
 $(document).ready(function(){
-  $(".currentPlayer").append('<span class="player">Fire Before Ashes</span>')
   $(".start").on("click", function(){
     console.log("You've pressed start")
     $(".turn").append('<span class="turn">This is turn: </span>');
@@ -13,7 +12,7 @@ $(document).ready(function(){
     $(".m").remove();
     $(".counter").remove();
     $(".player").remove();
-    $(".currentPlayer").append("<span>It's "+currentPlayer+"'s turn.")
+    $(".currentPlayer").append("<span class='player'>It's "+currentPlayer+"'s turn.</span>")
     $(".turn .turn").append("<span class='counter'>"+turnCounter+"</span>");
     $(".games").remove(".counter")
     $(".games").append("<span class='counter'>"+gameCounter+"</span>")
@@ -36,9 +35,9 @@ $(document).ready(function(){
       } else if (element[i] === ' R ') {
         $square.find('.piece').addClass('red');
       } else if (element[i] === ' b ') {
-        $square.find('.piece').addClass('black king');
+        $square.find('.piece').addClass('black bKing');
       } else if (element[i] === ' r ') {
-        $square.find('.piece').addClass('red king');
+        $square.find('.piece').addClass('red rKing');
       }
     }
   }

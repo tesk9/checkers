@@ -9,8 +9,8 @@ var resetBoard = function () {
     [" _ ", " B "," _ "," B "," _ "," B "," _ "," B "],
     [" _ "," _ "," _ "," _ ", " _ "," _ "," _ "," _ "],
     [" _ "," _ "," _ "," _ ", " _ "," _ "," _ "," _ "],
-    [" R "," _ "," R "," _ "," R "," _ "," R "," _ " ],
-    [" _ ", " R "," _ "," R "," _ "," R "," _ "," R "],
+    [" R "," _ "," R "," _ "," B "," _ "," B "," _ " ],
+    [" _ ", " R "," _ "," R "," _ "," B "," _ "," R "],
     [" R "," _ "," R "," _ "," R "," _ "," R "," _ " ]
   ];
   gameCounter++;
@@ -19,8 +19,8 @@ var resetBoard = function () {
   turnCounter = 1;
   blackPiecesLeft = 12;
   redPiecesLeft = 12;
-  taunt_on = prompt("Enter any value if you'd like to play with taunts. They are irritating.");
-  // mustJumpsOn = prompt("Enter any value if you'd like to play with must-jumps.");
+  // taunt_on = prompt("Enter any value if you'd like to play with taunts. They are irritating.");
+  mustJumpsOn = prompt("Enter any value if you'd like to play with must-jumps.");
 };
 
 var attemptMove = function (row1, col1, row2, col2) {
@@ -29,7 +29,7 @@ var attemptMove = function (row1, col1, row2, col2) {
   row2 = charToNum[row2];
   // Must-Jumps //
   // Check that piece to move belongs to currentPlayer //
-  if (board[row1][col1] == currentPlayer) {
+  if (board[row1][col1].toLowerCase() == currentPlayer.toLowerCase()) {
 
     // Check not jumping on top of existing piece //
     if (!(board[row2][col2] !== " _ ")) {
@@ -37,15 +37,26 @@ var attemptMove = function (row1, col1, row2, col2) {
       // Check if desired move is on the board  //
       if (row2>=0 && col2>=0 && row2 <=7 && col2 <=7) {
 
-        // If move is to an adjacent forward square, make move //
-        if (((row1 == row2+1 && currentPlayer==" R ")| (row1 == row2-1 && currentPlayer==" B ")) && (col1 == col2+1 | col1 == col2-1)) {
-          makeMove(row1, col1, row2, col2);
-        } 
-          // Jump Conditions: // 
-          else if (col1 == col2+2 | col1 == col2-2) {
-            jumpConditions(row1, col1, row2, col2);
+        // Proceed if desired square is in adjacent columns, otherwise check jump condition //
+        if ( col1 === col2 - 1 || col1 === col2 + 1) {
 
-          }  else { notAllowedMessage("Not a valid move. Adjacent black squares only.") }
+          // Make move if desired square is also in forward adjacent row, with respect to player direction //
+          if ((row1 == row2+1 && currentPlayer==" R ") || (row1 == row2-1 && currentPlayer==" B ")) {
+            makeMove(row1, col1, row2, col2);
+          } else if ( row1 == row2+1 || row1 == row2-1) {
+            var piece = board[row1][col1];
+            if ( piece === currentPlayer.toLowerCase() ) {
+              makeMove(row1, col1, row2, col2);
+            } else {
+              notAllowedMessage("Your piece hasn't been kinged! It needs to be a king to move backwards.");
+            }
+          } else { notAllowedMessage("Not a valid move. Adjacent black squares only.") }
+        }  
+
+        // Jump Conditions: // 
+        else if (col1 == col2+2 || col1 == col2-2) {
+          jumpConditions(row1, col1, row2, col2);
+        }  
       } else { notAllowedMessage("Not a valid move. Stay on the board!") }
     } else {notAllowedMessage("No jumping ON other pieces. Think leapfrog, not dog pile.") }
   } else { notAllowedMessage(currentPlayer+", you don't have a piece there") }
@@ -109,9 +120,13 @@ var gameOver = function (pieces, loser) {
 }
 
 var jumpConditions = function (row1, col1, row2, col2) {
+  var piece = board[row1][col1];
   var rowJumped = (row1+row2)/2, colJumped = (col2+col1)/2;
   var squareJumped = board[rowJumped][colJumped];
   if ( (currentPlayer === " B " && squareJumped === " R " && row1 == row2-2 ) || (currentPlayer === " R " && squareJumped === " B " && row1 == row2+2) ) {
+    removePiece(rowJumped, colJumped);
+    makeMove(row1, col1, row2, col2, true);
+  } else if (piece === currentPlayer.toLowerCase() && (squareJumped !== (currentPlayer||currentPlayer.toLowerCase())) && (row1 === (row2 + 2 || row2 - 2))) {
     removePiece(rowJumped, colJumped);
     makeMove(row1, col1, row2, col2, true);
   } else { 
