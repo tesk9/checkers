@@ -77,19 +77,19 @@ var moveLegal = function (row1, col1, row2, col2) {
     return false;
   }
 
-    function jumpConditions () {
-      var piece = board[row1][col1];
-      var rowJumped = (row1+row2)/2, colJumped = (col1+col2)/2;
-      var squareJumped = board[rowJumped][colJumped];
-      if ( (currentPlayer === " B " && (squareJumped === " R "|| squareJumped ===" r ") && row1 == row2-2 ) || (currentPlayer === " R " && (squareJumped === " B "|| squareJumped === " b ") && row1 == row2+2) ) {
-        return [row1, col1, row2, col2, rowJumped, colJumped];
-      } else if (piece === currentPlayer.toLowerCase() && (squareJumped !== (currentPlayer||currentPlayer.toLowerCase())) && (row1 === row2 + 2 || row1 === row2 - 2)) {
-        return [row1, col1, row2, col2, rowJumped, colJumped];
-      } else { 
-        message = "You can't jump that! No jumping empty spaces or your own pieces.";
-        return false;
-      }
+  function jumpConditions () {
+    var piece = board[row1][col1];
+    var rowJumped = (row1+row2)/2, colJumped = (col1+col2)/2;
+    var squareJumped = board[rowJumped][colJumped];
+    if ( (currentPlayer === " B " && (squareJumped === " R "|| squareJumped ===" r ") && row1 == row2-2 ) || (currentPlayer === " R " && (squareJumped === " B "|| squareJumped === " b ") && row1 == row2+2) ) {
+      return [row1, col1, row2, col2, rowJumped, colJumped];
+    } else if (piece === currentPlayer.toLowerCase() && (squareJumped !== (currentPlayer||currentPlayer.toLowerCase())) && squareJumped !== " _ " && (row1 === row2 + 2 || row1 === row2 - 2)) {
+      return [row1, col1, row2, col2, rowJumped, colJumped];
+    } else { 
+      message = "You can't jump that! No jumping empty spaces or your own pieces.";
+      return false;
     }
+  }
 
 
   function onBoard () {
@@ -145,7 +145,9 @@ var makeMove = function (row1, col1, row2, col2, changePlayer) {
   board[row1][col1] = " _ ";
   board[row2][col2] = piece;
   if (currentPlayer == " B " && changePlayer) {
-    setTimeout(function () {compMove()}, 700);
+    if (playComputer) {
+      setTimeout(function () {compMove()}, 700);
+    }
   } else if (currentPlayer == " B " && !changePlayer) {
     currentPlayer = " R ";
     enemy = " B ";
