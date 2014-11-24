@@ -1,4 +1,4 @@
-var board, currentPlayer, enemy, taunt_on;
+var board, currentPlayer, enemy, taunt_on, mustJumpsOn;
 var turnCounter, blackPiecesLeft, redPiecesLeft;
 var gameCounter = 0;
 var message;
@@ -21,8 +21,8 @@ var resetBoard = function () {
   blackPiecesLeft = 12;
   redPiecesLeft = 12;
   message = "There's been an error."
-  // taunt_on = prompt("Enter any value if you'd like to play with taunts. They are irritating.");
-  // mustJumpsOn = prompt("Enter any value if you'd like to play with must-jumps.");
+  taunt_on = prompt("Enter any value if you'd like to play with taunts. They are irritating.");
+  mustJumpsOn = prompt("Enter any value if you'd like to play with must-jumps.");
 };
 
 
@@ -42,8 +42,19 @@ var attemptMove = function(row1, col1, row2, col2) {
     removePiece(moveCheck[4], moveCheck[5]);
     moveMade();
   } else if (moveCheck) {
-    makeMove(row1, col1, row2, col2);
-    moveMade();
+    if (mustJumpsOn) {
+      var jumpsOpen = mustJump();
+      if (jumpsOpen == 0) {
+        makeMove(row1, col1, row2, col2);
+        moveMade();
+      } else {
+        message = "Not a valid move!\nYou're playing with must-jumps.\nThat means that if there are jumps available, you have to take them.";
+        notAllowedMessage();
+      }
+    } else {
+        makeMove(row1, col1, row2, col2);
+        moveMade();
+    }
   } else {
     notAllowedMessage();
     message = "There's been an error."
@@ -193,13 +204,29 @@ var kingMe = function(row1, col1, row2, col2) {
   } 
 }
 
-// var mustJump = function () {
-//   board.forEach(checkByRow);
-//   var possMoves = [];
-//   var checkByRow = function (row) {
-//     var startPos = 0;
-//     for (startPos; i < 8; i++){
-//       // if (){}
-//     }
-//   }
-// }
+var mustJump = function () {
+  var possMoves = [];
+  var row = 0;
+  for (row; row < 8; row++) {
+    checkByRow(row);
+  }
+
+  function checkByRow (row) {
+    var col = 0;
+    for (col; col < 8; col++) {
+      checkIfLegal(row, col, row+2, col+2);
+      checkIfLegal(row, col, row-2, col-2);
+      checkIfLegal(row, col, row+2, col-2);
+      checkIfLegal(row, col, row-2, col+2);      
+    }
+  }
+
+  function checkIfLegal (row, col, addRow, addCol) {
+    var moveCheck = moveLegal(row, col, addRow, addCol);
+    if (typeof(moveCheck) === "object"){
+      possMoves.push([row,col,addRow,addCol]);
+    }
+  }
+  return possMoves;
+}
+
