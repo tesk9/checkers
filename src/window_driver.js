@@ -1,6 +1,7 @@
 $(document).ready(function(){
   $(".start").on("click", function(){
     console.log("You've pressed start")
+    $(".turn .turn").remove();
     $(".turn").append('<span class="turn">This is turn: </span>');
     resetBoard();
     changeBoard();
@@ -18,7 +19,7 @@ $(document).ready(function(){
     $(".games").append("<span class='counter'>"+gameCounter+"</span>")
   });
 
-  $(document).on("invalidMove", function (e, message){
+  $(document).on("invalidMove", function (e){
     $(".m").remove();
     $(".message").append("<span class='m'>"+message+"</span>");
   });
@@ -66,7 +67,7 @@ $(document).ready(function(){
     var redPiecesTaken = 12 - redPiecesLeft;
     $(this).find(".b").append("<span class='l'>" + blackPiecesTaken + "</span>");
     $(this).find(".r").append("<span class='l'>" + redPiecesTaken + "</span>");
-    console.log("Am I getting hit?");
+    // $(document).trigger("boardChange");
   });
 
 });

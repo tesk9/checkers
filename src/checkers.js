@@ -1,6 +1,7 @@
 var board, currentPlayer, enemy, taunt_on;
 var turnCounter, blackPiecesLeft, redPiecesLeft;
 var gameCounter = 0;
+var message;
 
 var resetBoard = function () {
   board = [
@@ -9,8 +10,8 @@ var resetBoard = function () {
     [" _ ", " B "," _ "," B "," _ "," B "," _ "," B "],
     [" _ "," _ "," _ "," _ ", " _ "," _ "," _ "," _ "],
     [" _ "," _ "," _ "," _ ", " _ "," _ "," _ "," _ "],
-    [" R "," _ "," R "," _ "," B "," _ "," B "," _ " ],
-    [" _ ", " R "," _ "," R "," _ "," B "," _ "," R "],
+    [" R "," _ "," R "," _ "," R "," _ "," R "," _ " ],
+    [" _ ", " R "," _ "," R "," _ "," R "," _ "," R "],
     [" R "," _ "," R "," _ "," R "," _ "," R "," _ " ]
   ];
   gameCounter++;
@@ -19,49 +20,115 @@ var resetBoard = function () {
   turnCounter = 1;
   blackPiecesLeft = 12;
   redPiecesLeft = 12;
+  message = "There's been an error."
   // taunt_on = prompt("Enter any value if you'd like to play with taunts. They are irritating.");
-  mustJumpsOn = prompt("Enter any value if you'd like to play with must-jumps.");
+  // mustJumpsOn = prompt("Enter any value if you'd like to play with must-jumps.");
 };
 
-var attemptMove = function (row1, col1, row2, col2) {
-  console.log(row1, col1, row2, col2);
-  row1 = charToNum[row1];
-  row2 = charToNum[row2];
-  // Must-Jumps //
-  // Check that piece to move belongs to currentPlayer //
-  if (board[row1][col1].toLowerCase() == currentPlayer.toLowerCase()) {
 
-    // Check not jumping on top of existing piece //
-    if (!(board[row2][col2] !== " _ ")) {
-
-      // Check if desired move is on the board  //
-      if (row2>=0 && col2>=0 && row2 <=7 && col2 <=7) {
-
-        // Proceed if desired square is in adjacent columns, otherwise check jump condition //
-        if ( col1 === col2 - 1 || col1 === col2 + 1) {
-
-          // Make move if desired square is also in forward adjacent row, with respect to player direction //
-          if ((row1 == row2+1 && currentPlayer==" R ") || (row1 == row2-1 && currentPlayer==" B ")) {
-            makeMove(row1, col1, row2, col2);
-          } else if ( row1 == row2+1 || row1 == row2-1) {
-            var piece = board[row1][col1];
-            if ( piece === currentPlayer.toLowerCase() ) {
-              makeMove(row1, col1, row2, col2);
-            } else {
-              notAllowedMessage("Your piece hasn't been kinged! It needs to be a king to move backwards.");
-            }
-          } else { notAllowedMessage("Not a valid move. Adjacent black squares only.") }
-        }  
-
-        // Jump Conditions: // 
-        else if (col1 == col2+2 || col1 == col2-2) {
-          jumpConditions(row1, col1, row2, col2);
-        }  
-      } else { notAllowedMessage("Not a valid move. Stay on the board!") }
-    } else {notAllowedMessage("No jumping ON other pieces. Think leapfrog, not dog pile.") }
-  } else { notAllowedMessage(currentPlayer+", you don't have a piece there") }
+var moveMade = function(){
+  displayBoard();
+  $(document).trigger("boardChange");
+  gameOver(redPiecesLeft, "White");
+  gameOver(blackPiecesLeft, "Black");
 }
 
+var attemptMove = function(row1, col1, row2, col2) {
+  row1 = charToNum[row1];
+  row2 = charToNum[row2];
+  var moveCheck = moveLegal(row1, col1, row2, col2);
+  if (typeof(moveCheck) === "object") {
+    makeMove(row1, col1, row2, col2, true);
+    removePiece(moveCheck[4], moveCheck[5]);
+    moveMade();
+  } else if (moveCheck) {
+    makeMove(row1, col1, row2, col2);
+    moveMade();
+  } else {
+    notAllowedMessage();
+    message = "There's been an error."
+  }
+}
+
+var jumpConditions = function (row1, col1, row2, col2) {
+    var piece = board[row1][col1];
+    var rowJumped = (row1+row2)/2, colJumped = (col1+col2)/2;
+    var squareJumped = board[rowJumped][colJumped];
+    if ( (currentPlayer === " B " && (squareJumped === " R "|| squareJumped ===" r ") && row1 == row2-2 ) || (currentPlayer === " R " && (squareJumped === " B "|| squareJumped === " b ") && row1 == row2+2) ) {
+      return [row1, col1, row2, col2, rowJumped, colJumped];
+    } else if (piece === currentPlayer.toLowerCase() && (squareJumped !== (currentPlayer||currentPlayer.toLowerCase())) && (row1 === row2 + 2 || row1 === row2 - 2)) {
+      return [row1, col1, row2, col2, rowJumped, colJumped];
+    } else { 
+      message = "You can't jump that! No jumping empty spaces or your own pieces.";
+      return false;
+    }
+  }
+
+
+var onBoard = function (row1, col1, row2, col2) {
+  if (row2>=0 && col2>=0 && row2 <=7 && col2 <=7) {
+    return true;
+  } else { 
+    message = "Not a valid move. Stay on the board!";
+    return false;
+  }
+}
+
+var rightTurn = function (row1, col1) {
+  if (board[row1][col1].toLowerCase() === currentPlayer.toLowerCase()) {
+    return true;
+  } else {
+    message = currentPlayer+", it's your turn. You don't have a piece there.";
+    return false;
+  }
+}
+
+var noJumpOns = function (row2, col2) {
+  if (!(board[row2][col2] !== " _ ")) {
+    return true;
+  } else {
+    message = "No jumping ON other pieces. Think leapfrog, not dog pile.";
+    return false;
+  }
+}
+
+var isAdjacent = function (row1, col1, row2, col2) {
+  if ( col1 === col2+1 || col1 === col2-1) {
+    return true;
+  } 
+}
+
+var forwardOrKing = function (row1, col1, row2, col2) {
+  if ((row1 == row2+1 && currentPlayer==" R ") || (row1 == row2-1 && currentPlayer==" B ")) {
+    return true;
+  } else if (row1 === row2+1 || row1 === row2-1){
+    if (board[row1][col1] === currentPlayer.toLowerCase()) {
+      return true;
+    } else {
+      message = "Your piece hasn't been kinged! It needs to be a king to move backwards.";
+    }
+  } else {
+    message = "Not a valid move. Adjacent black squares only.";
+  }
+}
+
+var moveLegal = function (row1, col1, row2, col2) {
+  if (onBoard(row1, col1, row2, col2)) {
+    if (rightTurn(row1, col1)) {
+      if (noJumpOns(row2, col2)) {
+        if (isAdjacent(row1, col1, row2, col2)) {
+          if (forwardOrKing(row1, col1, row2, col2)) {
+            return true;
+          }
+        } else if (col1 === col2+2 || col1 === col2-2){
+          return jumpConditions(row1, col1, row2, col2)
+        }
+      }
+    } 
+  } else {
+    return false;
+  }
+}
 
 var makeMove = function(row1, col1, row2, col2, changePlayer) {
   var piece = kingMe(row1, col1, row2, col2);
@@ -76,10 +143,6 @@ var makeMove = function(row1, col1, row2, col2, changePlayer) {
     enemy = " R ";
     turnCounter++;
   }
-  displayBoard();
-  $(document).trigger("boardChange", board);
-  gameOver(redPiecesLeft, "White");
-  gameOver(blackPiecesLeft, "Black");
 }
 
 var removePiece = function(row, col){
@@ -93,9 +156,9 @@ var removePiece = function(row, col){
   $(document).trigger("pieceTaken");
 }
 
-var notAllowedMessage = function (message) {
+var notAllowedMessage = function () {
   console.log(message);
-  $(document).trigger("invalidMove", message);
+  $(document).trigger("invalidMove");
 }
 
 var taunt = function (taunt){
@@ -119,21 +182,6 @@ var gameOver = function (pieces, loser) {
   }
 }
 
-var jumpConditions = function (row1, col1, row2, col2) {
-  var piece = board[row1][col1];
-  var rowJumped = (row1+row2)/2, colJumped = (col2+col1)/2;
-  var squareJumped = board[rowJumped][colJumped];
-  if ( (currentPlayer === " B " && squareJumped === " R " && row1 == row2-2 ) || (currentPlayer === " R " && squareJumped === " B " && row1 == row2+2) ) {
-    removePiece(rowJumped, colJumped);
-    makeMove(row1, col1, row2, col2, true);
-  } else if (piece === currentPlayer.toLowerCase() && (squareJumped !== (currentPlayer||currentPlayer.toLowerCase())) && (row1 === (row2 + 2 || row2 - 2))) {
-    removePiece(rowJumped, colJumped);
-    makeMove(row1, col1, row2, col2, true);
-  } else { 
-    notAllowedMessage("You can't jump that! No jumping empty spaces or your own pieces.") 
-  }
-}
-
 var kingMe = function(row1, col1, row2, col2) {
   var piece = board[row1][col1];
   if (row2 === 0 && piece == " R ") {
@@ -142,6 +190,16 @@ var kingMe = function(row1, col1, row2, col2) {
     return " b ";
   } else {
     return piece;
-  }
-  
+  } 
 }
+
+// var mustJump = function () {
+//   board.forEach(checkByRow);
+//   var possMoves = [];
+//   var checkByRow = function (row) {
+//     var startPos = 0;
+//     for (startPos; i < 8; i++){
+//       // if (){}
+//     }
+//   }
+// }
