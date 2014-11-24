@@ -1,4 +1,4 @@
-var board, currentPlayer, enemy, taunt_on, mustJumpsOn;
+var board, currentPlayer, enemy, taunt_on, mustJumpsOn, playComputer;
 var turnCounter, blackPiecesLeft, redPiecesLeft;
 var gameCounter = 0;
 var message;
@@ -25,11 +25,6 @@ var resetBoard = function () {
   mustJumpsOn = prompt("Enter any value if you'd like to play with must-jumps.");
   playComputer = prompt("Enter any value if you'd like to play against the computer.");
 };
-
-
-// var turnHandler = function () {
-
-// }
 
 var moveMade = function () {
   changeBoard();
@@ -149,14 +144,19 @@ var makeMove = function (row1, col1, row2, col2, changePlayer) {
   var piece = kingMe(row1, col1, row2, col2);
   board[row1][col1] = " _ ";
   board[row2][col2] = piece;
-  if (currentPlayer == " B " && !changePlayer) {
+  if (currentPlayer == " B " && changePlayer) {
+    setTimeout(function () {compMove()}, 700);
+  } else if (currentPlayer == " B " && !changePlayer) {
     currentPlayer = " R ";
     enemy = " B ";
     turnCounter++;
-  } else if (!changePlayer){
+  } else if (!changePlayer) {
     currentPlayer = " B ";
     enemy = " R ";
     turnCounter++;
+    if (playComputer) {
+      setTimeout(compMove(), 700);
+    }
   }
 }
 
@@ -212,18 +212,18 @@ var mustJump = function () {
   var possMoves = [];
   var row = 0;
   for (row; row < 8; row++) {
-    checkByRow(row, possMoves, 2);
+    checkByRow(row, possMoves, 2, checkIfLegal);
   }
   return possMoves;
 }
 
-var checkByRow = function (row, possMoves, every) {
+var checkByRow = function (row, possMoves, every, func) {
   var col = 0;
   for (col; col < 8; col++) {
-    checkIfLegal(row, col, row+every, col+every, possMoves);
-    checkIfLegal(row, col, row-every, col-every, possMoves);
-    checkIfLegal(row, col, row+every, col-every, possMoves);
-    checkIfLegal(row, col, row-every, col+every, possMoves);      
+    func(row, col, row+every, col+every, possMoves);
+    func(row, col, row-every, col-every, possMoves);
+    func(row, col, row+every, col-every, possMoves);
+    func(row, col, row-every, col+every, possMoves);      
   }
 }
 
@@ -235,15 +235,30 @@ var checkIfLegal = function (row, col, addRow, addCol, movesArray) {
   return movesArray;
 }
 
+var checkIfLegal2 = function (row, col, addRow, addCol, movesArray) {
+  var moveCheck = moveLegal(row, col, addRow, addCol);
+  if (moveCheck === true){
+    movesArray.push([row,col,addRow,addCol]);
+  }
+  return movesArray;
+}
+
 var getCompOptions = function () {
   var compMoveOptions = mustJump();
   if (compMoveOptions.length === 0) {
     var row = 0;
     for (row; row < 8; row++) {
-      checkByRow(row, compMoveOptions, 1);
+      checkByRow(row, compMoveOptions, 1, checkIfLegal2);
     }
   }
   var findMoveInArray = Math.floor(Math.random() * compMoveOptions.length);
   var randomMove = compMoveOptions[findMoveInArray];
+  return randomMove;
+}
+
+var compMove = function () {
+  var moveTo = getCompOptions();
+  console.log(moveTo)
+  attemptMove(numToChar[moveTo[0]], moveTo[1], numToChar[moveTo[2]], moveTo[3]);
 }
 
