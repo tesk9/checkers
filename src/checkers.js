@@ -21,7 +21,7 @@ var resetBoard = function () {
   blackPiecesLeft = 12;
   redPiecesLeft = 12;
   message = "There's been an error."
-  taunt_on = prompt("Enter any value if you'd like to play with taunts. They are irritating.");
+  // taunt_on = prompt("Enter any value if you'd like to play with taunts. They are irritating.");
   mustJumpsOn = prompt("Enter any value if you'd like to play with must-jumps.");
   playComputer = prompt("Enter any value if you'd like to play against the computer.");
 };
@@ -61,29 +61,13 @@ var attemptMove = function (row1, col1, row2, col2) {
 }
 
 var moveLegal = function (row1, col1, row2, col2) {
-  if (onBoard(row1, col1, row2, col2)) {
-    if (rightTurn(row1, col1)) {
-      if (noJumpOns(row2, col2)) {
-        if (isAdjacent(row1, col1, row2, col2)) {
-          if (forwardOrKing(row1, col1, row2, col2)) {
-            return true;
-          }
-        } else if (col1 === col2+2 || col1 === col2-2){
-          return jumpConditions(row1, col1, row2, col2)
-        }
-      }
-    } 
-  } else {
-    return false;
-  }
-
-  function jumpConditions () {
+  var isLegalJump = function () {
     var piece = board[row1][col1];
     var rowJumped = (row1+row2)/2, colJumped = (col1+col2)/2;
     var squareJumped = board[rowJumped][colJumped];
     if ( (currentPlayer === " B " && (squareJumped === " R "|| squareJumped ===" r ") && row1 == row2-2 ) || (currentPlayer === " R " && (squareJumped === " B "|| squareJumped === " b ") && row1 == row2+2) ) {
       return [row1, col1, row2, col2, rowJumped, colJumped];
-    } else if (piece === currentPlayer.toLowerCase() && (squareJumped !== (currentPlayer||currentPlayer.toLowerCase())) && squareJumped !== " _ " && (row1 === row2 + 2 || row1 === row2 - 2)) {
+    } else if (piece === currentPlayer.toLowerCase() && (squareJumped !== currentPlayer) && (squareJumped !== currentPlayer.toLowerCase()) && squareJumped !== " _ " && (row1 === row2 + 2 || row1 === row2 - 2)) {
       return [row1, col1, row2, col2, rowJumped, colJumped];
     } else { 
       message = "You can't jump that! No jumping empty spaces or your own pieces.";
@@ -91,8 +75,7 @@ var moveLegal = function (row1, col1, row2, col2) {
     }
   }
 
-
-  function onBoard () {
+  var isOnBoard = function () {
     if (row2>=0 && col2>=0 && row2 <=7 && col2 <=7) {
       return true;
     } else { 
@@ -101,7 +84,7 @@ var moveLegal = function (row1, col1, row2, col2) {
     }
   }
 
-  function rightTurn () {
+  var isRightTurn = function () {
     if (board[row1][col1].toLowerCase() === currentPlayer.toLowerCase()) {
       return true;
     } else {
@@ -110,7 +93,7 @@ var moveLegal = function (row1, col1, row2, col2) {
     }
   }
 
-  function noJumpOns () {
+  var isNotJumpOn = function () {
     if (!(board[row2][col2] !== " _ ")) {
       return true;
     } else {
@@ -119,13 +102,13 @@ var moveLegal = function (row1, col1, row2, col2) {
     }
   }
 
-  function isAdjacent () {
+  var isAdjacent = function () {
     if ( col1 === col2+1 || col1 === col2-1) {
       return true;
     } 
   }
 
-  function forwardOrKing () {
+  var isForwardOrKing = function () {
     if ((row1 == row2+1 && currentPlayer==" R ") || (row1 == row2-1 && currentPlayer==" B ")) {
       return true;
     } else if (row1 === row2+1 || row1 === row2-1){
@@ -138,7 +121,18 @@ var moveLegal = function (row1, col1, row2, col2) {
       message = "Not a valid move. Adjacent black squares only.";
     }
   }
-}
+
+  if (isOnBoard() && isRightTurn() && isNotJumpOn()) {
+    if (isAdjacent(row1, col1, row2, col2)) {
+      if (isForwardOrKing(row1, col1, row2, col2)) {
+        return true;
+      }
+    } else if (col1 === col2+2 || col1 === col2-2){
+      return isLegalJump(row1, col1, row2, col2)
+    }
+  }
+  return false;
+};
 
 var makeMove = function (row1, col1, row2, col2, changePlayer) {
   var piece = kingMe(row1, col1, row2, col2);

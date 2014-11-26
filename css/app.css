@@ -15,15 +15,23 @@
 }
 
 .red {
-  background-color: red;
   border: 2px solid #ff0000;
   box-sizing: border-box;
+  background: radial-gradient(circle, #d4423a,red,#93423a);
 }
 
 .black {
-  background-color: black;
+  background: radial-gradient(circle, #2F302F,black,darkgray);
   border: 2px solid gray;
   box-sizing: border-box;
+}
+
+.red:hover {
+  background: radial-gradient(circle, #d4423a,#9e99dc,#93423a);
+}
+
+.black:hover {
+    background: radial-gradient(circle, #2F302F,#9e99dc,darkgray);
 }
 
 .rKing {
@@ -36,8 +44,8 @@
 
 .piece {
   margin: 5px;
-  width: 40px; /*40*/
-  height: 40px; /*40*/
+  width: 40px;
+  height: 40px;
   display: inline-block;
   border-radius: 50%;
 }
