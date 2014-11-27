@@ -21,9 +21,7 @@ var resetBoard = function () {
   blackPiecesLeft = 12;
   redPiecesLeft = 12;
   message = "There's been an error."
-  // taunt_on = prompt("Enter any value if you'd like to play with taunts. They are irritating.");
-  mustJumpsOn = prompt("Enter any value if you'd like to play with must-jumps.");
-  playComputer = prompt("Enter any value if you'd like to play against the computer.");
+
 };
 
 var moveMade = function () {
@@ -157,9 +155,9 @@ var makeMove = function (row1, col1, row2, col2, changePlayer) {
 }
 
 var removePiece = function (row, col) {
-  if (board[row][col] === " B "){
+  if (board[row][col].toLowerCase() === " b "){
     blackPiecesLeft--;
-  } else if (board[row][col] === " R "){
+  } else if (board[row][col].toLowerCase() === " r "){
     redPiecesLeft--;
   }
   board[row][col] = " _ ";
@@ -223,6 +221,7 @@ var checkByRow = function (row, possMoves, every, func) {
   }
 }
 
+// Returns legal jump moves //
 var checkIfLegal = function (row, col, addRow, addCol, movesArray) {
   var moveCheck = moveLegal(row, col, addRow, addCol);
   if (typeof(moveCheck) === "object"){
@@ -231,6 +230,7 @@ var checkIfLegal = function (row, col, addRow, addCol, movesArray) {
   return movesArray;
 }
 
+// Returns legal non-jump moves //
 var checkIfLegal2 = function (row, col, addRow, addCol, movesArray) {
   var moveCheck = moveLegal(row, col, addRow, addCol);
   if (moveCheck === true){

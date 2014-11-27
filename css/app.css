@@ -21,8 +21,9 @@
 }
 
 .black {
-  background: radial-gradient(circle, #2F302F,black,darkgray);
-  border: 2px solid gray;
+  /*background: radial-gradient(circle, #2F302F,black,darkgray);*/
+  background: radial-gradient(circle, #191919,#4c4c4c,#191919);
+  border: 2px solid #666666;
   box-sizing: border-box;
 }
 
@@ -31,7 +32,7 @@
 }
 
 .black:hover {
-    background: radial-gradient(circle, #2F302F,#9e99dc,darkgray);
+  background: radial-gradient(circle, #2F302F,#9e99dc,darkgray);
 }
 
 .rKing {

@@ -1,11 +1,14 @@
 $(document).ready(function(){
   $(".start").on("click", function(){
-    console.log("You've pressed start")
     $(".turn .turn").remove();
     $(".turn").append('<span class="turn">This is turn: </span>');
+    mustJumpsOn = $('#mustJump').prop("checked");
+    playComputer = $('#playComputer').prop("checked");
+    taunt_on = console.log($('#tauntOn').prop("checked"));
+    $(".startOptions").hide();
     resetBoard();
     changeBoard();
-    $(".start").text("New Game");
+    $(".start").val("New Game");
   });
 
  $(document).on("boardChange", function (e){

@@ -38,6 +38,9 @@ var getMove = function () {
 }
 
 var play = function () {
+    // taunt_on = prompt("Enter any value if you'd like to play with taunts. They are irritating.");
+  mustJumpsOn = prompt("Enter any value if you'd like to play with must-jumps.");
+  playComputer = prompt("Enter any value if you'd like to play against the computer.");
   resetBoard()
   displayBoard();
   getMove();
@@ -50,7 +53,8 @@ var stopPlaying = function (input){
   } else if (input[0] == "s") {
     getMove()
   } else if(input[0] == "o") {
-    console.log(input.splice(1,input.length) + "loses!");
+    var winnerLength = input.length;
+    console.log(input.substr(1,winnerLength) + " loses!");
   }else {
     return input;
   }
