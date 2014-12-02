@@ -46,8 +46,9 @@ var attemptMove = function (row1, col1, row2, col2) {
       }
     }
   }
-  var moveMade = function () {
-    changeBoard(row1, col1, row2, col2);
+  var moveMade = function (row1, col1, row2, col2) {
+    $(document).trigger("movePiece", [row1, col1, row2, col2])
+    setTimeout(function(){changeBoard()}, 1000);
     gameOver(redPiecesLeft, "Red");
     gameOver(blackPiecesLeft, "Black");
   }
@@ -58,20 +59,20 @@ var attemptMove = function (row1, col1, row2, col2) {
   if (typeof(moveCheck) === "object") {
     makeMove(row1, col1, row2, col2, true);
     removePiece(moveCheck[4], moveCheck[5]);
-    moveMade();
+    moveMade(row1, col1, row2, col2);
   } else if (moveCheck) {
     if (mustJumpsOn) {
       var jumpsOpen = mustJump();
       if (jumpsOpen == 0) {
         makeMove(row1, col1, row2, col2);
-        moveMade();
+        moveMade(row1, col1, row2, col2);
       } else {
         message = "Not a valid move!\nYou're playing with must-jumps.\nThat means that if there are jumps available, you have to take them.";
         notAllowedMessage();
       }
     } else {
         makeMove(row1, col1, row2, col2);
-        moveMade();
+        moveMade(row1, col1, row2, col2);
     }
   } else {
     notAllowedMessage();
@@ -179,10 +180,9 @@ var taunt = function (taunt) {
   }
 }
 
-var changeBoard = function (row1, col1, row2, col2) {
-  displayBoard();
-  $(document).trigger("movePiece", [row1, col1, row2, col2]);
-  setTimeout(function(){$(document).trigger("boardChange")}, 1000);
+var changeBoard = function () {
+  displayBoard();;
+  $(document).trigger("boardChange")
 }
 
 var gameOver = function (pieces, loser) {
