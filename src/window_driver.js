@@ -4,14 +4,26 @@ $(document).ready(function(){
     $(".turn").append('<span class="turn">This is turn: </span>');
     mustJumpsOn = $('#mustJump').prop("checked");
     playComputer = $('#playComputer').prop("checked");
-    taunt_on = console.log($('#tauntOn').prop("checked"));
+    taunt_on = $('#tauntOn').prop("checked");
     $(".startOptions").hide();
     resetBoard();
     changeBoard();
     $(".start").val("New Game");
   });
 
- $(document).on("boardChange", function (e){
+
+  $(document).on("movePiece", function (e, row1, col1, row2, col2){
+    var diffRow = (row2 - row1) * 57 + "px";
+    var diffCol = (col2 - col1) * 57 + "px";
+    var $row = $(".row-"+numToChar[row1]);
+    var $square = $row.find('.col-'+col1);
+    var $piece= $square.find("span");
+    $piece.css("left", diffCol);
+    $piece.css("top", diffRow);
+
+  });
+
+  $(document).on("boardChange", function (e){
     board.forEach(eachRow);
     $(".m").remove();
     $(".counter").remove();
@@ -70,7 +82,6 @@ $(document).ready(function(){
     var redPiecesTaken = 12 - redPiecesLeft;
     $(this).find(".b").append("<span class='l'>" + blackPiecesTaken + "</span>");
     $(this).find(".r").append("<span class='l'>" + redPiecesTaken + "</span>");
-    // $(document).trigger("boardChange");
   });
 
 });

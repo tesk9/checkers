@@ -20,17 +20,38 @@ var resetBoard = function () {
   turnCounter = 1;
   blackPiecesLeft = 12;
   redPiecesLeft = 12;
-  message = "There's been an error."
-
+  message = "There's been an error.";
 };
 
-var moveMade = function () {
-  changeBoard();
-  gameOver(redPiecesLeft, "Red");
-  gameOver(blackPiecesLeft, "Black");
-}
 
 var attemptMove = function (row1, col1, row2, col2) {
+  var makeMove = function (row1, col1, row2, col2, changePlayer) {
+    var piece = kingMe(row1, col1, row2, col2);
+    board[row1][col1] = " _ ";
+    board[row2][col2] = piece;
+    if (currentPlayer == " B " && changePlayer) {
+      if (playComputer) {
+        setTimeout(function () {compMove()}, 1000);
+      }
+    } else if (currentPlayer == " B " && !changePlayer) {
+      currentPlayer = " R ";
+      enemy = " B ";
+      turnCounter++;
+    } else if (!changePlayer) {
+      currentPlayer = " B ";
+      enemy = " R ";
+      turnCounter++;
+      if (playComputer) {
+        setTimeout(compMove(), 1000);
+      }
+    }
+  }
+  var moveMade = function () {
+    changeBoard(row1, col1, row2, col2);
+    gameOver(redPiecesLeft, "Red");
+    gameOver(blackPiecesLeft, "Black");
+  }
+  
   row1 = charToNum[row1];
   row2 = charToNum[row2];
   var moveCheck = moveLegal(row1, col1, row2, col2);
@@ -132,27 +153,6 @@ var moveLegal = function (row1, col1, row2, col2) {
   return false;
 };
 
-var makeMove = function (row1, col1, row2, col2, changePlayer) {
-  var piece = kingMe(row1, col1, row2, col2);
-  board[row1][col1] = " _ ";
-  board[row2][col2] = piece;
-  if (currentPlayer == " B " && changePlayer) {
-    if (playComputer) {
-      setTimeout(function () {compMove()}, 700);
-    }
-  } else if (currentPlayer == " B " && !changePlayer) {
-    currentPlayer = " R ";
-    enemy = " B ";
-    turnCounter++;
-  } else if (!changePlayer) {
-    currentPlayer = " B ";
-    enemy = " R ";
-    turnCounter++;
-    if (playComputer) {
-      setTimeout(compMove(), 700);
-    }
-  }
-}
 
 var removePiece = function (row, col) {
   if (board[row][col].toLowerCase() === " b "){
@@ -179,9 +179,10 @@ var taunt = function (taunt) {
   }
 }
 
-var changeBoard = function () {
+var changeBoard = function (row1, col1, row2, col2) {
   displayBoard();
-  $(document).trigger("boardChange");
+  $(document).trigger("movePiece", [row1, col1, row2, col2]);
+  setTimeout(function(){$(document).trigger("boardChange")}, 1000);
 }
 
 var gameOver = function (pieces, loser) {
@@ -255,6 +256,8 @@ var getCompOptions = function () {
 var compMove = function () {
   var moveTo = getCompOptions();
   console.log(moveTo)
-  attemptMove(numToChar[moveTo[0]], moveTo[1], numToChar[moveTo[2]], moveTo[3]);
+  setTimeout(function(){
+    attemptMove(numToChar[moveTo[0]], moveTo[1], numToChar[moveTo[2]], moveTo[3])
+  }, 700);
 }
 
