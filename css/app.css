@@ -1,0 +1,73 @@
+.col {
+  display: inline-block;
+  background-color: black;
+  width: 50px;
+  height: 50px;
+}
+
+.row {
+  height: 50px;
+  display: inline-block;
+}
+
+.empty {
+  background-color: red;
+}
+
+.red {
+  border: 2px solid #ff0000;
+  box-sizing: border-box;
+  background: radial-gradient(circle, #d4423a,red,#93423a);
+}
+
+.black {
+  /*background: radial-gradient(circle, #2F302F,black,darkgray);*/
+  background: radial-gradient(circle, #191919,#4c4c4c,#191919);
+  border: 2px solid #666666;
+  box-sizing: border-box;
+}
+
+.red:hover {
+  background: radial-gradient(circle, #d4423a,#9e99dc,#93423a);
+}
+
+.black:hover {
+  background: radial-gradient(circle, #2F302F,#9e99dc,darkgray);
+}
+
+.rKing {
+  border: 2px solid yellow;
+}
+
+.bKing {
+  border: 2px solid yellow;
+}
+
+.piece {
+  margin: 5px;
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  border-radius: 50%;
+  transition-duration: 1s;
+  transition-timing-function: linear;
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+
+.trans {
+  transition-duration: 2s;
+  transition-timing-function: linear;
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+
+.message {
+  display: inline;
+}
+
+.currentPlayer {
+  display: inline;
+}

@@ -1,0 +1,120 @@
+<html>
+  <head>
+    <script src="./vendor/jquery-1.10.2.min.js"></script>
+    <script src="./src/checkers.js"></script>
+    <script src="./src/console_driver.js"></script>
+    <script src="./src/window_driver.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/app.css">
+  </head>
+  <body>
+    <span class="taken b">Black Pieces Taken: 
+      <span class="l">0</span>
+    </span><br>
+    <span class="taken r">Red Pieces Taken: 
+      <span class="l">0</span>
+    </span><br>
+    <span class="row row-a">
+      <span class="col col-0 empty"></span>
+      <span class="col col-1"></span>
+      <span class="col col-2 empty"></span>
+      <span class="col col-3"></span>
+      <span class="col col-4 empty"></span>
+      <span class="col col-5"></span>
+      <span class="col col-6 empty"></span>
+      <span class="col col-7"></span>
+    </span>
+    <span class="message"></span>
+    <br>
+    <span class="row row-b">
+      <span class="col col-0"></span>
+      <span class="col col-1 empty"></span>
+      <span class="col col-2"></span>
+      <span class="col col-3 empty"></span>
+      <span class="col col-4"></span>
+      <span class="col col-5 empty"></span>
+      <span class="col col-6"></span>
+      <span class="col col-7 empty"></span>
+    </span>
+    <br>
+    <span class="row row-c">
+      <span class="col col-0 empty"></span>
+      <span class="col col-1"></span>
+      <span class="col col-2 empty"></span>
+      <span class="col col-3"></span>
+      <span class="col col-4 empty"></span>
+      <span class="col col-5"></span>
+      <span class="col col-6 empty"></span>
+      <span class="col col-7"></span>
+    </span>
+    <br>
+    <span class="row row-d">
+      <span class="col col-0"></span>
+      <span class="col col-1 empty"></span>
+      <span class="col col-2"></span>
+      <span class="col col-3 empty"></span>
+      <span class="col col-4"></span>
+      <span class="col col-5 empty"></span>
+      <span class="col col-6"></span>
+      <span class="col col-7 empty"></span>
+    </span>
+    <br>
+    <span class="row row-e">
+      <span class="col col-0 empty"></span>
+      <span class="col col-1"></span>
+      <span class="col col-2 empty"></span>
+      <span class="col col-3"></span>
+      <span class="col col-4 empty"></span>
+      <span class="col col-5"></span>
+      <span class="col col-6 empty"></span>
+      <span class="col col-7"></span>
+    </span>
+    <br>
+    <span class="row row-f">
+      <span class="col col-0"></span>
+      <span class="col col-1 empty"></span>
+      <span class="col col-2"></span>
+      <span class="col col-3 empty"></span>
+      <span class="col col-4"></span>
+      <span class="col col-5 empty"></span>
+      <span class="col col-6"></span>
+      <span class="col col-7 empty"></span>
+    </span>
+    <br>
+    <span class="row row-g">
+      <span class="col col-0 empty"></span>
+      <span class="col col-1"></span>
+      <span class="col col-2 empty"></span>
+      <span class="col col-3"></span>
+      <span class="col col-4 empty"></span>
+      <span class="col col-5"></span>
+      <span class="col col-6 empty"></span>
+      <span class="col col-7"></span>
+    </span>
+    <span class="currentPlayer"></span>
+    <br>
+    <span class="row row-h">
+      <span class="col col-0"></span>
+      <span class="col col-1 empty"></span>
+      <span class="col col-2"></span>
+      <span class="col col-3 empty"></span>
+      <span class="col col-4"></span>
+      <span class="col col-5 empty"></span>
+      <span class="col col-6"></span>
+      <span class="col col-7 empty"></span>
+    </span>
+    <br>
+    <br>
+
+    <br>
+    <span class="turn"></span>
+    <br>
+    <span class="games">Games Played: <span class="counter">0</span></span>
+    <br>
+    <div class="startOptions">
+      <label ><input type="checkbox" class="startOptions" id="mustJump" checked>Must-Jumps</label><br>
+      <label><input type="checkbox" class="startOptions" id="playComputer" checked>Play Computer</label><br>
+      <label><input type="checkbox" class="startOptions" id="tauntOn">Taunts On</label><br>
+    </div>
+    <input type="submit" class="start" value="Start the game">
+  </body>
+</html>
